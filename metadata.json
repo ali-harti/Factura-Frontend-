@@ -1,0 +1,6 @@
+{
+  "name": "Factura",
+  "description": "Any invoice. Any language. Seconds. AI-powered invoice OCR platform.",
+  "requestFramePermissions": ["identity-credentials-get"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

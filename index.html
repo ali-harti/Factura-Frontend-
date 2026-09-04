@@ -1,0 +1,3356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factura | Any invoice. Any language. Seconds.</title>
+  <meta name="description" content="AI-powered invoice OCR platform. Extract data from any invoice in seconds." />
+  <meta property="og:title" content="Factura | AI Invoice OCR" />
+  <meta property="og:description" content="AI-powered invoice OCR platform. Extract data from any invoice in seconds." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0a08;
+      --card: #1a1410;
+      --accent: #E8724A;
+      --accent-glow: rgba(232, 114, 74, 0.3);
+      --text: #ffffff;
+      --text-muted: #888888;
+      --border: #2a2018;
+      --border-light: rgba(255, 255, 255, 0.05);
+    }
+    :root[data-theme="light"] {
+      --bg: #ffffff;
+      --card: #f4f4f5;
+      --text: #09090b;
+      --text-muted: rgba(9, 9, 11, 0.7);
+      --border: rgba(0, 0, 0, 0.15);
+      --border-light: rgba(0, 0, 0, 0.05);
+      --accent: #E8724A;
+      --accent-glow: rgba(232, 114, 74, 0.15);
+      --bg-alt: #f4f4f5;
+}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+    
+    /* Smooth Theme Transitions */
+    body, header, footer, .stats, .problem-card, .pricing-card, .faq-btn, .faq-content, .upload-area, .btn-outline {
+      transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 { font-weight: 700; line-height: 0.95; letter-spacing: -0.02em; }
+    h1 { font-size: 4.5rem; letter-spacing: -0.03em; }
+    h2 { font-size: 2.25rem; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { color: var(--text-muted); line-height: 1.7; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    .section {
+      padding: 6rem 0;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--text);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .btn-outline {
+      background-color: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      background-color: var(--border-light);
+    }
+
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 5rem;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .logo img {
+      transition: filter 0.3s;
+    }
+    :root[data-theme="light"] .logo img {
+      filter: invert(1) hue-rotate(180deg);
+    }
+    :root[data-theme="light"] .theme-toggle {
+       color: #09090b;
+    }
+    .logo img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      margin: -35px -32px -35px -35px;
+    }
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      background-color: var(--accent);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    nav .btn {
+      padding: 0.625rem 1.5rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-top: 5rem;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+      background-size: 32px 32px;
+      background-position: center;
+    }
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-headline {
+      margin-bottom: 1.5rem;
+    }
+    .reveal-word {
+      opacity: 0;
+      display: inline-block;
+      animation: wordReveal 0.6s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+    @keyframes wordReveal {
+      0% { opacity: 0; transform: translateY(10px) rotate(-2deg); }
+      100% { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+    .hero-sub {
+      font-size: 1.25rem;
+      margin-bottom: 2.5rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 4rem;
+    }
+    .flags-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideIn 1s 1s forwards;
+    }
+    .flags {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+    }
+    .flags-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    
+    /* Testimonials Carousel */
+    .testimonials-section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-alt);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .testimonials-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 2.5rem;
+      color: var(--text);
+    }
+    .marquee {
+      width: 100vw;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+    .marquee:hover .marquee-content {
+      animation-play-state: paused;
+    }
+    .marquee::before, .marquee::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 10vw;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .marquee::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg-alt), transparent);
+    }
+    .marquee::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg-alt), transparent);
+    }
+    .marquee-content {
+      display: inline-block;
+      animation: scrollMarquee 40s linear infinite;
+    }
+    @keyframes scrollMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .testimonial-card {
+      display: inline-block;
+      width: 350px;
+      padding: 2rem;
+      margin: 0 1rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: var(--bg);
+      white-space: normal;
+      vertical-align: top;
+      transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+    }
+    .testimonial-quote {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .testimonial-meta h4 {
+      font-size: 0.95rem;
+      margin: 0;
+      color: var(--text);
+    }
+    .testimonial-meta p {
+      font-size: 0.8rem;
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    /* Social Proof */
+    .social-proof {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 0;
+      text-align: center;
+      background: var(--bg-alt, #0a0a0a);
+    }
+    .sp-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 250px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .sp-logos {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+    .sp-logos svg {
+      height: 32px;
+      fill: currentColor;
+    }
+
+    /* Grid Layouts */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Problem Section */
+    .problem-card {
+      background: var(--card);
+      padding: 2.5rem;
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ff4d4d, transparent);
+      opacity: 0.4;
+    }
+    .problem-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 77, 77, 0.3);
+      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6);
+    }
+    .problem-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 77, 77, 0.1);
+      color: #ff4d4d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Features Section */
+    .feature-block {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      margin-bottom: 8rem;
+    }
+    .feature-block:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    .feature-content {
+      flex: 1;
+    }
+    .feature-visual {
+      flex: 1;
+      background: var(--card);
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      aspect-ratio: 4/5;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .feature-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -4rem;
+      right: -4rem;
+      width: 12rem;
+      height: 12rem;
+      background: rgba(232, 114, 74, 0.2);
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feature-visual > div {
+      position: relative;
+      z-index: 1;
+    }
+    .feature-block:nth-child(2) .feature-visual > div::before {
+      content: '';
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent);
+      top: 40%;
+      left: 0;
+      z-index: 10;
+      animation: scan 3s infinite ease-in-out alternate;
+    }
+    @keyframes scan {
+      0% { top: 10%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 90%; opacity: 0; }
+    }
+    .feature-label {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* Language Showcase */
+    .lang-showcase {
+      background: linear-gradient(180deg, var(--bg) 0%, #0a0a0a 100%);
+      text-align: center;
+    }
+    .lang-cards {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 4rem;
+      overflow-x: auto;
+      padding-bottom: 2rem;
+      justify-content: center;
+    }
+    .lang-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      min-width: 250px;
+      text-align: left;
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+    }
+    .lang-card-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .lang-mockup {
+      height: 150px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .mock-line {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    /* How It Works */
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 4rem;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .step {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 50px;
+      height: 50px;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    /* Stats Bar */
+    .stats {
+      background: var(--bg-alt, #0a0a0a);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 0;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-label {
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Pricing */
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .pricing-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px rgba(232, 114, 74, 0.1);
+    }
+    .pricing-card.popular {
+      border-color: var(--accent);
+    }
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--text);
+      padding: 0.25rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .price {
+      font-size: 3rem;
+      font-weight: 700;
+      margin: 1rem 0;
+    }
+    .price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .features-list {
+      list-style: none;
+      margin: 2rem 0;
+      flex: 1;
+    }
+    .features-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+    .features-list svg {
+      color: var(--accent);
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* FAQ */
+    .faq-container {
+      max-width: 800px;
+      margin: 4rem auto 0;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-btn {
+      width: 100%;
+      text-align: left;
+      padding: 1.5rem 0;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+      color: var(--accent);
+    }
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      color: var(--text-muted);
+    }
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+    .faq-item.active .faq-content {
+      max-height: 200px;
+      padding-bottom: 1.5rem;
+    }
+
+    /* CTA Band */
+    .cta-band {
+      background: linear-gradient(135deg, #2a110a 0%, var(--bg) 100%);
+      border-top: 1px solid rgba(232, 114, 74, 0.2);
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-alt, #0a0a0a);
+      border-top: 1px solid var(--border);
+      padding: 4rem 0;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .footer-links a:hover {
+      color: var(--text);
+    }
+    .copyright {
+      width: 100%;
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 2rem; }
+      .nav-links { display: none; }
+      .feature-block, .feature-block:nth-child(even) {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+      .timeline::before {
+        display: none;
+      }
+      .step {
+        display: flex;
+        text-align: left;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+      .step-num {
+        margin: 0;
+        flex-shrink: 0;
+      }
+    }
+  
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      background: var(--border-light);
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Enhanced Hover Effects & Animations */
+    
+    /* Logo */
+    .logo {
+      cursor: pointer;
+      position: relative;
+    }
+    .logo img {
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
+    }
+    .logo:hover img {
+      transform: scale(1.15) rotate(5deg);
+      filter: drop-shadow(0 0 10px var(--accent));
+    }
+    
+    /* Buttons */
+    .btn {
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+      z-index: -1;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    [data-theme='light'] .btn:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    /* Nav Links */
+    .nav-links a {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: var(--primary, #000); /* fallback */
+      transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .nav-links a:hover {
+      color: var(--text);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
+    /* Feature & Problem Cards */
+    .problem-card, .pricing-card, .testimonial-card {
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+    .problem-card:hover, .pricing-card:hover, .testimonial-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+    }
+    
+    [data-theme='dark'] .problem-card:hover, 
+    [data-theme='dark'] .pricing-card:hover, 
+    [data-theme='dark'] .testimonial-card:hover {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    
+    [data-theme='light'] .problem-card:hover, 
+    [data-theme='light'] .pricing-card:hover, 
+    [data-theme='light'] .testimonial-card:hover {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+    
+    /* Icons Pulse */
+    .feature-icon, .problem-icon {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .feature-block:hover .feature-icon, .problem-card:hover .problem-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+    
+    /* FAQ Accodion Icon Spin */
+    .faq-btn {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .faq-btn:hover {
+      background-color: var(--border);
+    }
+    .faq-icon {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .faq-item.active .faq-icon {
+      transform: rotate(135deg);
+    }
+    
+    /* Timeline / How It Works */
+    .step-num {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease, color 0.3s ease;
+    }
+    .step:hover .step-num {
+      transform: scale(1.15) translateY(-3px);
+      background-color: var(--accent);
+      color: white;
+    }
+\n
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent), #fca048, #ff6b6b);
+      width: 0%;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* Lottie-style Micro Animations */
+    
+    @keyframes lottieClock {
+      0% { transform: rotate(0deg); }
+      20% { transform: rotate(90deg); }
+      40% { transform: rotate(180deg); }
+      60% { transform: rotate(270deg); }
+      80% { transform: rotate(360deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes lottieAlert {
+      0%, 100% { transform: translateX(0) scale(1); }
+      20% { transform: translateX(-2px) scale(1.1) rotate(-5deg); }
+      40% { transform: translateX(2px) scale(1.1) rotate(5deg); }
+      60% { transform: translateX(-2px) scale(1.1) rotate(-5deg); }
+      80% { transform: translateX(2px) scale(1.1) rotate(5deg); }
+    }
+    
+    @keyframes lottieChat {
+      0%, 100% { transform: scale(1) translateY(0); }
+      20% { transform: scale(1.1) translateY(-3px) rotate(-3deg); }
+      40% { transform: scale(1.1) translateY(-3px) rotate(3deg); }
+      60% { transform: scale(0.95) translateY(1px); }
+      80% { transform: scale(1.05) translateY(-1px); }
+    }
+    
+    @keyframes lottieUpload {
+      0%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-8px); }
+      70% { transform: translateY(4px); }
+    }
+
+    @keyframes lottiePulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 2px var(--accent)); }
+      50% { filter: drop-shadow(0 0 10px var(--accent)); }
+    }
+
+    /* Override the previous static scale/rotate */
+    .feature-block:hover .feature-icon, .problem-card:hover .problem-icon {
+      transform: none; /* Removed the static static transform */
+    }
+
+    /* Assign animations to specific SVGs */
+    .problem-card:nth-child(1):hover .problem-icon svg polyline {
+      transform-origin: 12px 12px;
+      animation: lottieClock 1.5s ease-in-out infinite;
+    }
+    
+    .problem-card:nth-child(2):hover .problem-icon svg {
+      animation: lottieAlert 0.8s ease-in-out infinite;
+    }
+    .problem-card:nth-child(2):hover .problem-icon svg path {
+      stroke: #ff6b6b;
+      transition: stroke 0.3s ease;
+    }
+    
+    .problem-card:nth-child(3):hover .problem-icon svg {
+      animation: lottieChat 1.5s ease-in-out infinite;
+    }
+    
+    /* Feature 1 Upload SVG inner arrow */
+    .feature-block:nth-child(1):hover .feature-visual svg polyline,
+    .feature-block:nth-child(1):hover .feature-visual svg line {
+      animation: lottieUpload 1s ease-in-out infinite;
+      stroke: var(--accent);
+      transition: stroke 0.3s ease;
+    }
+    
+    /* Feature icons color transition */
+    .feature-block:hover .feature-visual svg {
+      animation: lottiePulseGlow 2s ease-in-out infinite;
+    }
+
+
+    /* Feature 2: JSON Animation */
+    @keyframes typingCursor {
+      0%, 100% { border-right-color: transparent; }
+      50% { border-right-color: var(--accent); }
+    }
+    
+    .feature-block:nth-child(2):hover .feature-visual div {
+      border-right: 2px solid transparent;
+      animation: typingCursor 0.8s step-end infinite;
+    }
+
+    /* Problem Cards: Ensure stroke colors transition cleanly */
+    .problem-icon svg {
+      transition: stroke 0.3s ease;
+    }
+    .problem-card:hover .problem-icon svg {
+      stroke: var(--accent);
+    }
+    
+    /* Ensure the clock animation works from the center */
+    .problem-card:nth-child(1) .problem-icon svg polyline {
+      transform-origin: 12px 12px;
+    }
+
+
+    /* Pricing Tooltips */
+    .features-list li {
+      position: relative;
+    }
+    
+    .info-icon {
+      margin-left: auto;
+      color: var(--text-muted);
+      opacity: 0.5;
+      cursor: help;
+      transition: opacity 0.3s ease, color 0.3s ease;
+      width: 16px !important;
+      height: 16px !important;
+    }
+    
+    .features-list li:hover .info-icon {
+      opacity: 1;
+      color: var(--accent);
+    }
+    
+    .features-list li[data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: var(--card);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      white-space: normal;
+      width: max-content;
+      max-width: 200px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    .features-list li[data-tooltip]:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-5px);
+    }
+
+
+    /* Advanced Rich Animations & Hover Effects */
+
+    /* 1. Hero Background Ambient Pulse */
+    @keyframes heroAmbient {
+      0% { background-position: 0% 50%; opacity: 0.8; }
+      50% { background-position: 100% 50%; opacity: 1; }
+      100% { background-position: 0% 50%; opacity: 0.8; }
+    }
+    
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 60%);
+      opacity: 0.5;
+      animation: heroAmbient 8s ease-in-out infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* 2. Marquee Pause on Hover */
+    .marquee:hover .marquee-content {
+      animation-play-state: paused;
+    }
+    .marquee-content {
+      transition: opacity 0.3s ease;
+    }
+    .marquee:hover .marquee-content {
+      opacity: 0.8;
+    }
+
+    /* 3. Popular Badge Pulsing Glow */
+    @keyframes badgePulse {
+      0% { box-shadow: 0 0 0 0 rgba(232, 114, 74, 0.4); transform: translateX(-50%) scale(1); }
+      70% { box-shadow: 0 0 0 10px rgba(232, 114, 74, 0); transform: translateX(-50%) scale(1.05); }
+      100% { box-shadow: 0 0 0 0 rgba(232, 114, 74, 0); transform: translateX(-50%) scale(1); }
+    }
+    .popular-badge {
+      animation: badgePulse 2s infinite;
+    }
+
+    /* 4. Glossy Shine Sweep on Cards */
+    .problem-card, .pricing-card, .testimonial-card {
+      position: relative;
+      overflow: hidden; /* Needed for the shine sweep to not bleed */
+    }
+    
+    .problem-card::after, .pricing-card::after, .testimonial-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.05), 
+        transparent
+      );
+      transform: skewX(-25deg);
+      transition: left 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    [data-theme='light'] .problem-card::after, 
+    [data-theme='light'] .pricing-card::after, 
+    [data-theme='light'] .testimonial-card::after {
+      background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent
+      );
+    }
+
+    .problem-card:hover::after, .pricing-card:hover::after, .testimonial-card:hover::after {
+      left: 150%;
+    }
+
+    /* Keep content above the shine */
+    .problem-card > *, .pricing-card > *, .testimonial-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 5. Testimonial Avatar Bounce */
+    .testimonial-avatar {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    }
+    .testimonial-card:hover .testimonial-avatar {
+      transform: scale(1.2) rotate(5deg);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    /* 6. Button Inner Pulse */
+    @keyframes btnInnerPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    /* 7. Footer Social/Links elegant hover */
+    .footer-links a {
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+    .footer-links a:hover {
+      color: var(--accent);
+      transform: translateX(5px);
+    }
+
+
+    
+
+
+    /* Background Animated Orbs */
+    .bg-orbs {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      overflow: hidden;
+      z-index: -6;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+      animation: floatOrb 25s infinite ease-in-out alternate;
+    }
+    .orb-1 {
+      width: 50vw; height: 50vw;
+      max-width: 600px; max-height: 600px;
+      background: var(--accent-glow);
+      top: -10%; left: -10%;
+    }
+    .orb-2 {
+      width: 40vw; height: 40vw;
+      max-width: 500px; max-height: 500px;
+      background: rgba(150, 150, 150, 0.1);
+      bottom: -10%; right: -5%;
+      animation-delay: -12s;
+      animation-direction: alternate-reverse;
+    }
+    [data-theme="light"] .orb-2 {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(3vw, -5vh) scale(1.1); }
+      66% { transform: translate(-2vw, 2vh) scale(0.9); }
+      100% { transform: translate(4vw, 4vh) scale(1.2); }
+    }
+
+
+    /* Language Card Hover Effects */
+    .lang-card {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .lang-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px -10px rgba(232, 114, 74, 0.2);
+    }
+    
+    /* Light mode shadow adjust */
+    [data-theme='light'] .lang-card:hover {
+      box-shadow: 0 20px 40px -10px rgba(232, 114, 74, 0.15);
+    }
+
+    /* Glossy Sweep */
+    .lang-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.05), 
+        transparent
+      );
+      transform: skewX(-25deg);
+      transition: left 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    [data-theme='light'] .lang-card::after {
+      background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent
+      );
+    }
+
+    .lang-card:hover::after {
+      left: 150%;
+    }
+    
+    /* Mockup Inner Animation */
+    .lang-mockup {
+      transition: transform 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .lang-card:hover .lang-mockup {
+      transform: scale(1.02);
+    }
+    
+    /* Accent line pulse */
+    @keyframes mockupPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; filter: drop-shadow(0 0 4px var(--accent)); }
+    }
+    .lang-card:hover .mock-line[style*="var(--accent)"],
+    .lang-card:hover .mock-block {
+      animation: mockupPulse 1.5s infinite;
+    }
+
+
+    /* Floating Logo Image Animation */
+    @keyframes floatingLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .logo img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      margin: -35px -32px -35px -35px;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
+      animation: floatingLogo 3s ease-in-out infinite;
+    }
+    
+    .logo:hover img {
+      /* Pause the float on hover and apply the dynamic scale/rotate */
+      animation-play-state: paused;
+      transform: scale(1.15) rotate(5deg) translateY(-2px);
+      filter: drop-shadow(0 0 10px var(--accent));
+    }
+
+
+    
+    /* Auth Styles */
+    .auth-card {
+      width: 100%;
+      max-width: 460px;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      margin: 0 auto;
+      position: relative;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.5s ease-out;
+    }
+    .auth-card.enter {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .auth-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .auth-logo-wrap::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(232,114,74,0.12) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .auth-logo-wrap .logo {
+      position: relative;
+      z-index: 1;
+      font-size: 2.25rem;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .auth-logo-wrap .logo img {
+      width: 110px !important;
+      height: 110px !important;
+      margin: -35px -32px -35px -35px !important;
+      animation: none !important;
+      transform: none !important;
+    }
+    :root[data-theme="light"] .auth-logo-wrap .logo img {
+      filter: invert(1) hue-rotate(180deg) !important;
+    }
+    .auth-title {
+      color: var(--text);
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .auth-subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      background: #111008;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 14px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .google-btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(232, 114, 74, 0.2);
+    }
+    :root[data-theme="light"] .google-btn {
+      background: #ffffff;
+      color: #000;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .auth-divider span {
+      padding: 0 16px;
+    }
+
+    .auth-field {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .auth-field label {
+      display: block;
+      color: #888;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .auth-field input:not([type="checkbox"]) {
+      width: 100%;
+      background: #111008;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    :root[data-theme="light"] .auth-field input:not([type="checkbox"]) {
+      background: #ffffff;
+    }
+    .auth-field input:not([type="checkbox"]):focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232, 114, 74, 0.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+    .pwd-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .pwd-strength {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .pwd-seg {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      transition: background-color 0.3s;
+    }
+    .pwd-seg.s-1 { background: #ef4444; }
+    .pwd-seg.s-2 { background: #f97316; }
+    .pwd-seg.s-3 { background: #eab308; }
+    .pwd-seg.s-4 { background: #22c55e; }
+
+    .auth-terms {
+      margin-bottom: 24px;
+    }
+    .auth-terms label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .auth-terms input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+    .auth-terms a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .auth-terms a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 999px;
+    }
+
+    .auth-bottom {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .auth-bottom a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .auth-bottom a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-banner {
+      background: rgba(232,114,74,0.1);
+      border: 1px solid rgba(232,114,74,0.3);
+      color: var(--accent);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+      animation: slideDown 0.2s ease-out;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .inline-err {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 6px;
+      animation: slideDown 0.2s ease-out;
+    }
+
+    @media (max-width: 640px) {
+      .auth-card {
+        padding: 32px 24px;
+      }
+    }
+
+    
+    #signup-container, #login-container, #forgot-container {
+      transition: opacity 0.2s ease-in-out;
+    }
+    /* Chatbot Styles */
+    .chatbot-toggle {
+      z-index: 99999;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(232, 114, 74, 0.4);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .chatbot-toggle:hover {
+      transform: scale(1.1);
+    }
+    .chatbot-toggle svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .chatbot-window {
+      z-index: 99999;
+      position: fixed;
+      bottom: 6rem;
+      right: 2rem;
+      width: 350px;
+      height: 500px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .chatbot-window.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .chatbot-header {
+      padding: 1.5rem 1rem;
+      font-size: 1.1rem;
+      color: #ffffff;
+      position: relative;
+      z-index: 10;
+      background: var(--accent);
+      color: white;
+      padding: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chatbot-header-close {
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .chatbot-header-close:hover {
+      opacity: 1;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .chat-msg {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .chat-msg.user {
+      background: var(--border-light);
+      color: var(--text);
+      align-self: flex-end;
+      border-bottom-right-radius: 0.25rem;
+    }
+    .chat-msg.bot {
+      background: rgba(232, 114, 74, 0.1);
+      border: 1px solid rgba(232, 114, 74, 0.2);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 0.25rem;
+    }
+    .chat-msg.loading {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .chatbot-input {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg);
+    }
+    .chatbot-input input {
+      flex: 1;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chatbot-input input:focus {
+      border-color: var(--accent);
+    }
+    .chatbot-input button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .chatbot-input button:hover {
+      background-color: #d1623d;
+    }
+    .chatbot-input button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+
+    
+</style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="container nav-content">
+      <a href="/" onclick="navTo('/', event)" class="logo" style="text-decoration: none; color: inherit;">
+        <img src="/logo.png" alt="Factura Logo" />
+        Factura
+      </a>
+      <div class="nav-links" id="nav-center-links">
+        <a href="/#features">Features</a>
+        <a href="/#how-it-works">How it works</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#faq">FAQ</a>
+      </div>
+      <div class="nav-actions">
+        <button id="lang-toggle" class="theme-toggle" aria-label="Toggle language" title="Toggle language" style="font-weight: bold; font-size: 14px;">
+          FR
+        </button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+        <a href="/login" class="nav-signin" id="nav-signin" style="color: var(--text); font-weight: 500; text-decoration: none; margin-right: 16px; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">Sign In</a>
+        <a href="/signup" class="btn btn-primary nav-get-started" id="nav-get-started">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="landing-view">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content fade-up">
+      <h1 class="hero-headline">Any invoice. Any language. Seconds.</h1>
+      <p class="hero-sub">One AI that reads Arabic, French, English, Japanese, and 50+ more languages. PDFs, photos, scans. Factura turns any invoice from anywhere in the world into clean, exportable data. In under 30 seconds.</p>
+      <div class="hero-ctas">
+        <a href="/signup" class="btn btn-primary">Start for free</a>
+        <a href="#features" class="btn btn-outline">See it in action</a>
+      </div>
+      <div class="flags-row">
+        <div class="flags">🇺🇸 🇫🇷 🇸🇦 🇦🇪 🇪🇬 🇩🇪 🇯🇵 🇧🇷 🇮🇳 🇨🇳</div>
+        <div class="flags-label">Invoices from 50+ countries supported</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel -->
+  <section class="testimonials-section fade-up">
+    <h2>Trusted by finance and operations teams worldwide</h2>
+    <div class="marquee">
+      <div class="marquee-content">
+        <!-- Set 1 -->
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Factura cut our invoice processing time by 90%. It's like magic."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JD</div>
+            <div class="testimonial-meta">
+              <h4>Jane Doe</h4>
+              <p>CFO at TechFlow</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"We process invoices in 15 languages. Factura handles them all without a hiccup."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AK</div>
+            <div class="testimonial-meta">
+              <h4>Ahmed Khan</h4>
+              <p>VP Finance, GlobalTrade</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The best AI tool we've integrated this year. Simple, fast, and incredibly accurate."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SD</div>
+            <div class="testimonial-meta">
+              <h4>Sarah Dubois</h4>
+              <p>Accounting Director, Luxe</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"No more manual entry. Our team can finally focus on strategic work."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">YT</div>
+            <div class="testimonial-meta">
+              <h4>Yosuke Tanaka</h4>
+              <p>Operations Lead, K.K. Nexus</p>
+            </div>
+          </div>
+        </div>
+        <!-- Set 2 (Duplicate for infinite scroll) -->
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Factura cut our invoice processing time by 90%. It's like magic."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JD</div>
+            <div class="testimonial-meta">
+              <h4>Jane Doe</h4>
+              <p>CFO at TechFlow</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"We process invoices in 15 languages. Factura handles them all without a hiccup."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AK</div>
+            <div class="testimonial-meta">
+              <h4>Ahmed Khan</h4>
+              <p>VP Finance, GlobalTrade</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The best AI tool we've integrated this year. Simple, fast, and incredibly accurate."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SD</div>
+            <div class="testimonial-meta">
+              <h4>Sarah Dubois</h4>
+              <p>Accounting Director, Luxe</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"No more manual entry. Our team can finally focus on strategic work."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">YT</div>
+            <div class="testimonial-meta">
+              <h4>Yosuke Tanaka</h4>
+              <p>Operations Lead, K.K. Nexus</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-3">
+        <div class="problem-card fade-up">
+          <div class="problem-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <h3>Hours wasted daily</h3>
+          <p>Manual data entry wastes hours every day, pulling your team away from actual analysis and strategy.</p>
+        </div>
+        <div class="problem-card fade-up" style="transition-delay: 0.1s;">
+          <div class="problem-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+          <h3>Costly errors</h3>
+          <p>One typo in an invoice means payment disputes, delayed reconciliations, and damaged vendor relationships.</p>
+        </div>
+        <div class="problem-card fade-up" style="transition-delay: 0.2s;">
+          <div class="problem-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <h3>Global chaos</h3>
+          <p>Your invoices arrive in 5 languages and 3 formats, your team handles none of them efficiently.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="section" style="padding-top: 2rem;">
+    <div class="container">
+      
+      <!-- Feature 1 -->
+      <div class="feature-block fade-up">
+        <div class="feature-content">
+          <span class="feature-label">Seamless Ingestion</span>
+          <h2>Upload anything</h2>
+          <p>Drag & drop, email forwarding, or API. We accept PDF, JPG, PNG, and multi-page documents up to 20MB. Factura normalizes the input instantly.</p>
+        </div>
+        <div class="feature-visual">
+          <div style="text-align: center; border: 2px dashed var(--border); padding: 3rem; border-radius: 1rem; width: 80%; background: var(--bg);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="margin-bottom:1rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p style="color: var(--text); font-weight: 500;">Drag and drop invoice</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">PDF, PNG, JPG (max 20MB)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-block fade-up">
+        <div class="feature-content">
+          <span class="feature-label">Global Intelligence</span>
+          <h2>AI reads every language</h2>
+          <p>Powered by a state-of-the-art vision model, Factura extracts structured data from Latin, Arabic, CJK, Cyrillic, Devanagari scripts and more. Always returns a confidence score and detected language.</p>
+        </div>
+        <div class="feature-visual">
+          <div style="width: 80%; background: #0f0f0f; border-radius: 0.5rem; padding: 1.5rem; font-family: monospace; font-size: 0.85rem; color: #a0a0a0; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="color: #4ade80;">{</div>
+            <div style="padding-left: 1rem;">
+              "vendor": <span style="color: #fca5a5;">"TechCorp K.K."</span>,<br>
+              "language_detected": <span style="color: #fca5a5;">"Japanese"</span>,<br>
+              "total_amount": <span style="color: #93c5fd;">245000</span>,<br>
+              "currency": <span style="color: #fca5a5;">"JPY"</span>,<br>
+              "confidence_score": <span style="color: #93c5fd;">0.98</span>
+            </div>
+            <div style="color: #4ade80;">}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-block fade-up">
+        <div class="feature-content">
+          <span class="feature-label">Workflow Ready</span>
+          <h2>Correct, export, integrate</h2>
+          <p>Review data in our intuitive inline JSON editor for human corrections. Export to CSV and JSON, search your history, or push directly to your ERP via API.</p>
+        </div>
+        <div class="feature-visual">
+          <div style="width: 80%; height: 60%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; display: flex; flex-direction: column;">
+            <div style="border-bottom: 1px solid var(--border); padding: 0.75rem; display: flex; gap: 0.5rem;">
+              <div class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Export CSV</div>
+              <div class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Sync to ERP</div>
+            </div>
+            <div style="padding: 1rem; flex: 1;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                <span style="color: var(--text); font-size: 0.85rem;">Invoice #INV-2026</span>
+                <span style="color: #4ade80; font-size: 0.85rem;">Verified</span>
+              </div>
+              <div class="mock-line" style="width: 100%; margin-bottom: 0.5rem;"></div>
+              <div class="mock-line" style="width: 80%; margin-bottom: 0.5rem;"></div>
+              <div class="mock-line" style="width: 60%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Language Showcase -->
+  <section class="section lang-showcase fade-up">
+    <div class="container">
+      <h2>One tool. Every language.</h2>
+      <p style="max-width: 700px; margin: 0 auto; margin-bottom: 3rem;">From Latin scripts to Arabic RTL, CJK characters to Devanagari, Factura's AI vision model handles them all natively, with no configuration needed.</p>
+      
+      <div class="lang-cards">
+        <div class="lang-card">
+          <div class="lang-card-header">
+            <span>English</span>
+            <span style="color: #4ade80;">99%</span>
+          </div>
+          <div class="lang-mockup">
+            <div class="mock-line" style="width: 40%; background: var(--accent);"></div>
+            <div class="mock-line" style="width: 100%; margin-top: 1rem;"></div>
+            <div class="mock-line" style="width: 80%;"></div>
+            <div class="mock-line" style="width: 30%; margin-top: auto; align-self: flex-end; background: var(--text);"></div>
+          </div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-card-header">
+            <span>Arabic (RTL)</span>
+            <span style="color: #4ade80;">97%</span>
+          </div>
+          <div class="lang-mockup" style="align-items: flex-end;">
+            <div class="mock-line" style="width: 40%; background: var(--accent);"></div>
+            <div class="mock-line" style="width: 100%; margin-top: 1rem;"></div>
+            <div class="mock-line" style="width: 80%;"></div>
+            <div class="mock-line" style="width: 30%; margin-top: auto; align-self: flex-start; background: var(--text);"></div>
+          </div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-card-header">
+            <span>Japanese (CJK)</span>
+            <span style="color: #4ade80;">98%</span>
+          </div>
+          <div class="lang-mockup">
+            <div style="display: flex; justify-content: space-between; width: 100%;">
+              <div class="mock-line" style="width: 20%; background: var(--accent); height: 40px; border-radius: 4px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 60%; align-items: flex-end;">
+                <div class="mock-line" style="width: 100%;"></div>
+                <div class="mock-line" style="width: 80%;"></div>
+              </div>
+            </div>
+            <div class="mock-line" style="width: 30%; margin-top: auto; background: var(--text);"></div>
+          </div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-card-header">
+            <span>French</span>
+            <span style="color: #4ade80;">99%</span>
+          </div>
+          <div class="lang-mockup">
+            <div class="mock-line" style="width: 50%; background: var(--accent);"></div>
+            <div class="mock-line" style="width: 100%; margin-top: 1rem;"></div>
+            <div class="mock-line" style="width: 70%;"></div>
+            <div class="mock-line" style="width: 30%; margin-top: auto; align-self: flex-end; background: var(--text);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container fade-up">
+      <h2 style="text-align: center;">How it works</h2>
+      <div class="timeline">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Upload your invoice</h3>
+          <p>Upload any format (PDF, JPG, PNG) in any language. Drag & drop or use our API.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>AI extracts in seconds</h3>
+          <p>Our model returns structured JSON data, language detected, and a confidence score instantly.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Export and move on</h3>
+          <p>Review, correct if needed, and export to CSV, JSON, or sync directly to your ERP.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats fade-up">
+    <div class="container grid-3" style="gap: 4rem;">
+      <div class="stat-item">
+        <div class="stat-num" data-target="30" data-seconds>0</div>
+        <div class="stat-label">Average processing time</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="95" data-percent>0</div>
+        <div class="stat-label">Accuracy on clean scans</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="50" data-plus>0</div>
+        <div class="stat-label">Languages supported</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="section">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: 4rem;">Simple, transparent pricing</h2>
+      <div class="grid-3">
+        <!-- Starter -->
+        <div class="pricing-card fade-up">
+          <h3>Starter</h3>
+          <p>Perfect for small teams testing the waters.</p>
+          <div class="price">$0<span> / month</span></div>
+          <ul class="features-list">
+            <li data-tooltip="Process up to 50 invoices completely free. Resets on the 1st of every month."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 50 invoices / month <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Easily export your structured data in standard formats for analysis."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> CSV & JSON Export <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Our base AI model automatically recognizes and translates invoices in over 50 languages."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 50+ Languages <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Access Factura through our beautiful, intuitive web dashboard."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Web interface only <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+          </ul>
+          <a href="#" class="btn btn-outline" style="width: 100%;">Start for free</a>
+        </div>
+        
+        <!-- Pro -->
+        <div class="pricing-card popular fade-up" style="transition-delay: 0.1s;">
+          <div class="popular-badge">Most Popular</div>
+          <h3>Pro</h3>
+          <p>For growing finance departments.</p>
+          <div class="price">$199<span> / month</span></div>
+          <ul class="features-list">
+            <li data-tooltip="A generous allowance of 2,000 invoices per month, covering mid-sized teams."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 2,000 invoices / month <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Integrate Factura directly into your own tools using our REST or GraphQL API."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Full API Access <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Native sync with NetSuite, SAP, Quickbooks, and Xero."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> ERP Integrations <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Jump the queue. Get email support responses in under 2 hours."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Priority Support <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="width: 100%;">Start 14-day trial</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card fade-up" style="transition-delay: 0.2s;">
+          <h3>Enterprise</h3>
+          <p>For large organizations with strict privacy needs.</p>
+          <div class="price">Custom</div>
+          <ul class="features-list">
+            <li data-tooltip="No volume caps. We scale our extraction pipelines to match your needs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Unlimited invoices <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Self-host Factura on your own AWS/GCP instances, or use a dedicated single-tenant cloud."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Private deployment <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Guaranteed 99.99% uptime with financial penalties if we miss our target."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Custom SLA <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+            <li data-tooltip="Direct Slack channel and phone line to a dedicated technical account manager."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Dedicated account manager <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
+          </ul>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Run Factura on your own infrastructure, your data never leaves your network.</div>
+          <a href="#" class="btn btn-outline" style="width: 100%;">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container fade-up">
+      <h2 style="text-align: center;">Frequently Asked Questions</h2>
+      <div class="faq-container">
+        
+        <div class="faq-item">
+          <button class="faq-btn">
+            What languages does Factura support?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <div class="faq-content">
+            <p>Factura supports over 50 languages globally. Our AI vision model is trained to recognize Latin, Arabic, Cyrillic, Devanagari, and CJK (Chinese, Japanese, Korean) scripts seamlessly without any manual pre-configuration.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn">
+            How accurate is the extraction?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <div class="faq-content">
+            <p>On clean, digital PDFs and high-quality scans, Factura achieves 95%+ accuracy. For every extraction, we provide a confidence score so your team knows exactly which invoices might require a quick human review.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn">
+            Is my invoice data secure?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <div class="faq-content">
+            <p>Absolutely. Data is encrypted in transit and at rest. We are SOC2 compliant, and we do not use your invoice data to train our foundational models. For maximum security, see our Enterprise private deployment option.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn">
+            What file formats are accepted?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <div class="faq-content">
+            <p>We accept PDF (both native text and scanned), JPG, and PNG formats. Multi-page documents are fully supported up to a file size of 20MB per upload.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn">
+            Can I self-host Factura for full data privacy?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <div class="faq-content">
+            <p>Yes, our Enterprise plan includes an option for VPC or on-premise deployment. This ensures that your sensitive financial data never leaves your internal corporate network.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Band -->
+  <section class="section cta-band fade-up">
+    <div class="container">
+      <h2 style="font-size: 3rem; margin-bottom: 1rem;">Stop re-typing invoices.</h2>
+      <p style="font-size: 1.25rem; margin-bottom: 2.5rem;">Join thousands of finance teams who let AI do the reading.</p>
+      <a href="#pricing" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">Try Factura free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="logo">
+        <img src="/logo.png" alt="Factura Logo" />
+        Factura
+      </div>
+      <div class="footer-links">
+        <a href="#">Product</a>
+        <a href="#">Company</a>
+        <a href="#">Legal</a>
+      </div>
+      <div class="copyright">
+        &copy; 2026 Factura. All rights reserved.
+      </div>
+    </div>
+  </footer>
+  </div> <!-- End landing-view -->
+
+  <div id="auth-view" style="display: none; opacity: 0; transition: opacity 0.5s ease-in-out; position: absolute; top: 80px; left: 0; width: 100%; min-height: calc(100vh - 80px); z-index: 10; align-items: center; justify-content: center; padding: 2rem 1rem;">
+    <div class="auth-card" id="auth-card">
+      <div class="auth-logo-wrap">
+         <div class="logo">
+           <img src="/logo.png" alt="Factura Logo" />
+           Factura
+         </div>
+      </div>
+      
+      <!-- SIGNUP FORM -->
+      <div id="signup-container">
+        <h2 class="auth-title">Create your account</h2>
+        <p class="auth-subtitle">Start extracting invoices in minutes</p>
+        
+        <div id="signup-error" class="auth-banner" style="display:none;"></div>
+        
+        <button class="google-btn" onclick="triggerGoogleAuth()">
+          <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <form id="signup-form" onsubmit="handleSignup(event)">
+          <div class="auth-field">
+            <label>Full name</label>
+            <input type="text" id="signup-name" required />
+          </div>
+          <div class="auth-field">
+            <label>Email</label>
+            <input type="email" id="signup-email" required />
+          </div>
+          <div class="auth-field">
+            <label>Password</label>
+            <div class="password-wrap">
+              <input type="password" id="signup-password" required oninput="checkPasswordStrength(this.value)" />
+              <button type="button" class="pwd-toggle" onclick="togglePwd('signup-password')">Show</button>
+            </div>
+            <div class="pwd-strength">
+              <div class="pwd-seg" id="seg-1"></div>
+              <div class="pwd-seg" id="seg-2"></div>
+              <div class="pwd-seg" id="seg-3"></div>
+              <div class="pwd-seg" id="seg-4"></div>
+            </div>
+          </div>
+          <div class="auth-field">
+            <label>Confirm password</label>
+            <input type="password" id="signup-confirm" required />
+            <div id="signup-pwd-err" class="inline-err" style="display:none;">Passwords do not match</div>
+          </div>
+          <div class="auth-terms">
+            <label>
+              <input type="checkbox" required />
+              <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit" id="signup-btn">Create account</button>
+        </form>
+        <p class="auth-bottom">Already have an account? <a href="/login" onclick="navTo('/login', event)">Sign in</a></p>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-container" style="display: none; opacity: 0;">
+        <h2 class="auth-title">Welcome back</h2>
+        <p class="auth-subtitle">Sign in to your Factura account</p>
+        
+        <div id="login-error" class="auth-banner" style="display:none;"></div>
+
+        <button class="google-btn" onclick="triggerGoogleAuth()">
+          <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div class="auth-field">
+            <label>Email</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="auth-field">
+            <div style="display:flex; justify-content:space-between;">
+              <label>Password</label>
+              <a href="/forgot-password" onclick="navTo('/forgot-password', event)" style="font-size:13px; color:var(--accent); text-decoration:none; cursor:pointer;">Forgot password?</a>
+            </div>
+            <div class="password-wrap">
+              <input type="password" id="login-password" required />
+              <button type="button" class="pwd-toggle" onclick="togglePwd('login-password')">Show</button>
+            </div>
+          </div>
+          <div class="auth-terms">
+            <label>
+              <input type="checkbox" />
+              <span style="color:var(--text-muted);">Keep me signed in</span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit" id="login-btn">Sign in</button>
+        </form>
+        <p class="auth-bottom">Don't have an account? <a href="/signup" onclick="navTo('/signup', event)">Sign up for free</a></p>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div id="forgot-container" style="display: none; opacity: 0;">
+        
+        <div id="forgot-entry-state">
+          <h2 class="auth-title">Reset Password</h2>
+          <p class="auth-subtitle">Enter your email to receive a reset link.</p>
+          
+          <div id="forgot-error-banner" class="auth-banner" style="display:none;"></div>
+          
+          <form onsubmit="handleForgotPassword(event)">
+            <div class="auth-field">
+              <label>Email address</label>
+              <input type="email" id="forgot-email" required />
+            </div>
+            <button type="submit" class="btn btn-primary auth-submit" id="forgot-btn">Send Reset Link</button>
+          </form>
+          <p class="auth-bottom"><a href="/login" onclick="navTo('/login', event)">Back to Sign In</a></p>
+        </div>
+
+        <div id="forgot-success-state" style="display: none; text-align: center;">
+          <div style="width: 64px; height: 64px; background: rgba(232, 114, 74, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"></path>
+              <polyline points="22 7 12 14 2 7"></polyline>
+              <path d="m16 19 2 2 4-4"></path>
+            </svg>
+          </div>
+          <h2 class="auth-title">Check your email</h2>
+          <p class="auth-subtitle" style="margin-bottom: 32px;">We've sent a password reset link to <br/><strong id="forgot-success-email" style="color: var(--text);"></strong></p>
+          <button type="button" class="btn btn-primary auth-submit" onclick="navTo('/login', event)">Return to login</button>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+  <!-- Chatbot -->
+  <div class="chatbot-toggle" id="chatToggle" aria-label="Open Chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+  </div>
+  
+  <div class="chatbot-window" id="chatWindow">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+        <span style="color: white !important; font-weight: bold; z-index: 10; position: relative;">Factura Assistant</span>
+      </div>
+      <div class="chatbot-header-close" id="chatClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+      <div class="chat-msg bot">Hi there! I'm the Factura AI assistant. How can I help you today?</div>
+    </div>
+    <form class="chatbot-input" id="chatForm">
+      <input type="text" id="chatInput" placeholder="Ask about our features..." autocomplete="off" />
+      <button type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // Theme & Lang toggles
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+          document.documentElement.removeAttribute('data-theme');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      });
+    }
+
+    const dict = {
+      // Nav & Footer
+      "Features": "Fonctionnalités",
+      "How it works": "Comment ça marche",
+      "Pricing": "Tarifs",
+      "FAQ": "FAQ",
+      "Get Started": "Démarrer",
+      "Try Factura free": "Essayer Factura gratuitement",
+      "Product": "Produit",
+      "Company": "Entreprise",
+      "Legal": "Légal",
+      
+      // Hero
+      "Any invoice. Any language. Seconds.": "Toute facture. Toute langue. Secondes.",
+      "One AI that reads Arabic, French, English, Japanese, and 50+ more languages. PDFs, photos, scans. Factura turns any invoice from anywhere in the world into clean, exportable data. In under 30 seconds.": "Une IA qui lit l'arabe, le français, l'anglais, le japonais et plus de 50 autres langues. Factura transforme toute facture en données propres. En moins de 30 secondes.",
+      "Start for free": "Commencer gratuitement",
+      "See it in action": "Voir en action",
+      "Invoices from 50+ countries supported": "Factures de 50+ pays prises en charge",
+      
+      
+      // Testimonials
+      "Trusted by finance and operations teams worldwide": "Approuvé par les équipes financières et opérationnelles du monde entier",
+      "\"Factura cut our invoice processing time by 90%. It's like magic.\"": "\"Factura a réduit notre temps de traitement des factures de 90%. C'est magique.\"",
+      "CFO at TechFlow": "Directrice Financière chez TechFlow",
+      "\"We process invoices in 15 languages. Factura handles them all without a hiccup.\"": "\"Nous traitons des factures dans 15 langues. Factura les gère toutes sans problème.\"",
+      "VP Finance, GlobalTrade": "VP Finance, GlobalTrade",
+      "\"The best AI tool we've integrated this year. Simple, fast, and incredibly accurate.\"": "\"Le meilleur outil d'IA intégré cette année. Simple, rapide et incroyablement précis.\"",
+      "Accounting Director, Luxe": "Directrice Comptable, Luxe",
+      "\"No more manual entry. Our team can finally focus on strategic work.\"": "\"Fini la saisie manuelle. Notre équipe peut enfin se concentrer sur des tâches stratégiques.\"",
+      "Operations Lead, K.K. Nexus": "Responsable des Opérations, K.K. Nexus",
+
+      // The Problem section
+      "Why Factura?": "Pourquoi Factura ?",
+      "Hours wasted daily": "Heures perdues quotidiennement",
+      "Manual data entry wastes hours every day, pulling your team away from actual analysis and strategy.": "La saisie manuelle fait perdre des heures chaque jour, éloignant votre équipe de l'analyse et de la stratégie.",
+      "Costly errors": "Erreurs coûteuses",
+      "One typo in an invoice means payment disputes, delayed reconciliations, and damaged vendor relationships.": "Une seule faute de frappe entraîne des litiges, des retards et nuit aux relations avec les fournisseurs.",
+      "Global chaos": "Chaos global",
+      "Your invoices arrive in 5 languages and 3 formats, your team handles none of them efficiently.": "Vos factures arrivent dans 5 langues et 3 formats, votre équipe ne gère aucun d'eux efficacement.",
+      
+      // Language Feature
+      "One tool. Every language.": "Un outil. Toutes les langues.",
+      "From Latin scripts to Arabic RTL, CJK characters to Devanagari, Factura's AI vision model handles them all natively, with no configuration needed.": "Des scripts latins à l'arabe RTL, en passant par le CJK et le Devanagari, le modèle d'IA de Factura gère tout nativement.",
+      "English": "Anglais",
+      "French": "Français",
+      "Arabic (RTL)": "Arabe (RTL)",
+      "Japanese (CJK)": "Japonais (CJK)",
+      
+      // Features
+      "Everything you need to automate your accounts payable": "Tout ce qu'il faut pour automatiser vos comptes fournisseurs",
+      "Workflow Ready": "Prêt pour le workflow",
+      "Seamless Ingestion": "Ingestion fluide",
+      "Drag & drop, email forwarding, or API. We accept PDF, JPG, PNG, and multi-page documents up to 20MB. Factura normalizes the input instantly.": "Glisser-déposer, email, ou API. PDF, JPG, PNG jusqu'à 20Mo acceptés. Factura normalise tout instantanément.",
+      "Global Intelligence": "Intelligence globale",
+      "AI reads every language": "L'IA lit toutes les langues",
+      "Powered by a state-of-the-art vision model, Factura extracts structured data from Latin, Arabic, CJK, Cyrillic, Devanagari scripts and more. Always returns a confidence score and detected language.": "Factura extrait les données de divers scripts et langues. Renvoie toujours un score de confiance.",
+      "Export and move on": "Exportez et avancez",
+      "Review data in our intuitive inline JSON editor for human corrections. Export to CSV and JSON, search your history, or push directly to your ERP via API.": "Révisez et corrigez les données. Exportez en CSV/JSON, ou poussez vers votre ERP via API.",
+      
+      // Mock Dashboard text
+      "Drag and drop invoice": "Glissez-déposez la facture",
+      "PDF, PNG, JPG (max 20MB)": "PDF, PNG, JPG (max 20Mo)",
+      "Upload your invoice": "Téléchargez votre facture",
+      "Invoice #INV-2026": "Facture #INV-2026",
+      "Export CSV": "Exporter en CSV",
+      "Sync to ERP": "Synchroniser l'ERP",
+      
+      // How it Works
+      "Stop re-typing invoices.": "Arrêtez de retaper vos factures.",
+      "Join thousands of finance teams who let AI do the reading.": "Rejoignez des milliers d'équipes financières qui laissent l'IA faire la lecture.",
+      "Upload anything": "Téléchargez n'importe quoi",
+      "Upload any format (PDF, JPG, PNG) in any language. Drag & drop or use our API.": "Téléchargez tout format, toute langue. Glissez-déposez ou utilisez l'API.",
+      "AI extracts in seconds": "L'IA extrait en secondes",
+      "Our model returns structured JSON data, language detected, and a confidence score instantly.": "Données JSON, langue et score de confiance instantanés.",
+      "Correct, export, integrate": "Corrigez, exportez, intégrez",
+      "Review, correct if needed, and export to CSV, JSON, or sync directly to your ERP.": "Vérifiez, corrigez et exportez en CSV/JSON, ou synchronisez votre ERP.",
+      
+      // Stats
+      "Average processing time": "Temps de traitement moyen",
+      "Accuracy on clean scans": "Précision sur scans propres",
+      "Languages supported": "Langues prises en charge",
+      
+      // Pricing
+      "Simple, transparent pricing": "Tarifs simples et transparents",
+      "Starter": "Démarrage",
+      "Free": "Gratuit",
+      "Forever": "Pour toujours",
+      "Perfect for small teams testing the waters.": "Idéal pour les petites équipes qui se lancent.",
+      "/ month": "/ mois",
+      "50 invoices / month": "50 factures / mois",
+      "50+ Languages": "50+ Langues",
+      "Web interface only": "Interface web uniquement",
+      "Current Plan": "Plan actuel",
+      "Pro": "Pro",
+      "For growing finance departments.": "Pour les départements financiers en croissance.",
+      "2,000 invoices / month": "2 000 factures / mois",
+      "CSV & JSON Export": "Export CSV & JSON",
+      "Priority Support": "Support prioritaire",
+      "Start 14-day trial": "Commencer l'essai de 14j",
+      "Enterprise": "Entreprise",
+      "Custom": "Personnalisé",
+      "For large organizations with strict privacy needs.": "Pour grandes organisations aux besoins stricts.",
+      "Unlimited invoices": "Factures illimitées",
+      "Custom SLA": "SLA personnalisé",
+      "Dedicated account manager": "Gestionnaire de compte",
+      "Full API Access": "Accès API complet",
+      "ERP Integrations": "Intégrations ERP",
+      "Private deployment": "Déploiement privé",
+      "Contact Sales": "Contacter les ventes",
+      
+      // FAQ
+      "Frequently Asked Questions": "Foire aux Questions",
+      "Everything you need to know about Factura.": "Tout ce qu'il faut savoir sur Factura.",
+      "What languages does Factura support?": "Quelles langues Factura gère-t-il réellement ?",
+      "Factura supports over 50 languages globally. Our AI vision model is trained to recognize Latin, Arabic, Cyrillic, Devanagari, and CJK (Chinese, Japanese, Korean) scripts seamlessly without any manual pre-configuration.": "Factura gère plus de 50 langues (Latin, Arabe, Cyrillique, Devanagari, CJK) sans configuration.",
+      "What file formats are accepted?": "Quels formats sont acceptés ?",
+      "We accept PDF (both native text and scanned), JPG, and PNG formats. Multi-page documents are fully supported up to a file size of 20MB per upload.": "Nous acceptons les PDF (natifs ou scannés), JPG et PNG jusqu'à 20 Mo.",
+      "How accurate is the extraction?": "Quelle est la précision de l'extraction ?",
+      "On clean, digital PDFs and high-quality scans, Factura achieves 95%+ accuracy. For every extraction, we provide a confidence score so your team knows exactly which invoices might require a quick human review.": "Factura atteint 95%+ de précision sur des scans de qualité. Nous fournissons un score de confiance pour chaque extraction.",
+      "Is my invoice data secure?": "Les données de mes factures sont-elles sécurisées ?",
+      "Absolutely. Data is encrypted in transit and at rest. We are SOC2 compliant, and we do not use your invoice data to train our foundational models. For maximum security, see our Enterprise private deployment option.": "Absolument. Données cryptées et SOC2. Nous n'entraînons pas nos modèles sur vos données.",
+      "Can I self-host Factura for full data privacy?": "Puis-je héberger Factura pour la confidentialité des données ?",
+      "Yes, our Enterprise plan includes an option for VPC or on-premise deployment. This ensures that your sensitive financial data never leaves your internal corporate network.": "Oui, notre plan Entreprise inclut l'hébergement VPC ou sur site pour vos données sensibles.",
+    
+      // Additional elements
+      "$0": "0 €",
+      "$199": "199 €",
+      "© 2026 Factura. All rights reserved.": "© 2026 Factura. Tous droits réservés."
+    };
+
+    const langToggle = document.getElementById('lang-toggle');
+    let currentLang = 'en';
+
+    function walkDom(node, callback) {
+      if (node.nodeType === 3) {
+        callback(node);
+      } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
+        for (let i = 0; i < node.childNodes.length; i++) {
+          walkDom(node.childNodes[i], callback);
+        }
+      }
+    }
+
+    if (langToggle) {
+      // Store original text
+      const textNodes = [];
+      walkDom(document.body, (node) => {
+        if (!node.nodeValue) return;
+        const text = node.nodeValue.trim();
+        if (!text) return;
+        const strippedText = text.replace(/\s+/g, ' '); 
+        
+        let matchedFr = dict[strippedText];
+        if (matchedFr) {
+          textNodes.push({ node, en: text, fr: matchedFr });
+        } else if (strippedText === 'How it works' && node.parentNode && node.parentNode.tagName === 'H2') {
+           textNodes.push({ node, en: text, fr: dict['How it works_section'] || "Comment ça marche" });
+        }
+      });
+
+      langToggle.addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'fr' : 'en';
+        langToggle.textContent = currentLang === 'en' ? 'FR' : 'EN';
+        if (typeof animateHeadline === 'function') animateHeadline(currentLang);
+        
+        textNodes.forEach(item => {
+          item.node.nodeValue = item.node.nodeValue.replace(
+            currentLang === 'en' ? item.fr : item.en,
+            currentLang === 'en' ? item.en : item.fr
+          );
+        });
+
+        // Special handling for the animated headline (Word-by-word reveal)
+        const headline = document.querySelector('.hero-headline');
+        if (headline && !headline.querySelector('span')) {
+            // Already initialized? No, the animation script runs once.
+            // For a simple implementation, let's just trigger a page reload with hash or 
+            // dynamically rebuild the spans
+        }
+      });
+    }
+
+    // Word-by-word reveal in hero
+    const headline = document.querySelector('.hero-headline');
+    let originalHeadlineText = { en: "Any invoice. Any language. Seconds.", fr: "Toute facture. Toute langue. En secondes." };
+    
+    function animateHeadline(lang) {
+      if (!headline) return;
+      const text = originalHeadlineText[lang];
+      headline.innerHTML = '';
+      text.split(' ').forEach((word, i) => {
+        const span = document.createElement('span');
+        span.textContent = word;
+        span.classList.add('reveal-word');
+        span.style.animationDelay = `${i * 0.15}s`;
+        headline.appendChild(span);
+        headline.appendChild(document.createTextNode(' '));
+      });
+    }
+    
+    // Initial animation
+    animateHeadline('en');
+
+
+    // Navbar scroll effect
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Intersection Observer for fade-up animations
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+    // Stats count-up animation
+    const statsObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const stat = entry.target;
+          const target = parseFloat(stat.getAttribute('data-target'));
+          const duration = 2000;
+          const start = performance.now();
+          const isPercent = stat.hasAttribute('data-percent');
+          const isSeconds = stat.hasAttribute('data-seconds');
+          const isPlus = stat.hasAttribute('data-plus');
+          
+          const animate = (time) => {
+            const progress = Math.min((time - start) / duration, 1);
+            // Ease out quad
+            const easeProgress = 1 - (1 - progress) * (1 - progress);
+            const current = target * easeProgress;
+            
+            let formatted = Math.floor(current);
+            let prefix = isSeconds ? '< ' : '';
+            let suffix = isPercent ? '%' : (isPlus ? '+' : '');
+            
+            stat.textContent = prefix + formatted + suffix;
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              stat.textContent = prefix + target + suffix;
+            }
+          };
+          requestAnimationFrame(animate);
+          obs.unobserve(stat);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-num').forEach(el => statsObserver.observe(el));
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const btn = item.querySelector('.faq-btn');
+      btn.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        // Open clicked if it wasn't active
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  
+    // Scroll Progress
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      scrollProgress.style.width = progress + '%';
+    });
+
+  // Sparkle Canvas Particle System
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.style.position = 'fixed';
+    bgCanvas.style.top = '0';
+    bgCanvas.style.left = '0';
+    bgCanvas.style.width = '100vw';
+    bgCanvas.style.height = '100vh';
+    bgCanvas.style.pointerEvents = 'none';
+    bgCanvas.style.zIndex = '-5';
+    document.body.prepend(bgCanvas);
+
+    const bgCtx = bgCanvas.getContext('2d');
+    let bgParticles = [];
+    let cw, ch;
+
+    function initBgCanvas() {
+        cw = window.innerWidth;
+        ch = window.innerHeight;
+        bgCanvas.width = cw;
+        bgCanvas.height = ch;
+        bgParticles = [];
+        // Create particles based on screen size (roughly 1 per 12000 pixels)
+        const numParticles = Math.min(Math.floor((cw * ch) / 12000), 150);
+        for (let i = 0; i < numParticles; i++) {
+            bgParticles.push({
+                x: Math.random() * cw,
+                y: Math.random() * ch,
+                radius: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                alpha: Math.random(),
+                dAlpha: (Math.random() - 0.5) * 0.015,
+                isAccent: Math.random() > 0.85 // 15% of particles are accent color
+            });
+        }
+    }
+
+    function animateBgCanvas() {
+        bgCtx.clearRect(0, 0, cw, ch);
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const baseColor = isLight ? 'rgba(0, 0, 0, ' : 'rgba(255, 255, 255, ';
+        const accentColor = 'rgba(232, 114, 74, '; // --accent rgb approx
+
+        bgParticles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha += p.dAlpha;
+
+            if (p.alpha <= 0.05 || p.alpha >= 0.8) p.dAlpha *= -1;
+            
+            if (p.x < 0) p.x = cw;
+            if (p.x > cw) p.x = 0;
+            if (p.y < 0) p.y = ch;
+            if (p.y > ch) p.y = 0;
+
+            bgCtx.beginPath();
+            bgCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            bgCtx.fillStyle = (p.isAccent ? accentColor : baseColor) + p.alpha + ')';
+            bgCtx.fill();
+        });
+        requestAnimationFrame(animateBgCanvas);
+    }
+
+    window.addEventListener('resize', initBgCanvas);
+    initBgCanvas();
+    animateBgCanvas();
+
+  
+    
+    // Auth & Routing Logic
+    const landingView = document.getElementById('landing-view');
+    const authView = document.getElementById('auth-view');
+    const authCard = document.getElementById('auth-card');
+    const signupContainer = document.getElementById('signup-container');
+    const loginContainer = document.getElementById('login-container');
+    const forgotContainer = document.getElementById('forgot-container');
+    
+    // Nav elements to toggle
+    const navCenterLinks = document.getElementById('nav-center-links');
+    const navSignin = document.getElementById('nav-signin');
+    const navGetStarted = document.getElementById('nav-get-started');
+
+    function updateNavForAuth(isAuthPage) {
+      if (isAuthPage) {
+        navCenterLinks.style.display = 'none';
+        navSignin.style.display = 'none';
+        navGetStarted.style.display = 'none';
+        const chatTgl = document.getElementById('chatToggle');
+        if(chatTgl) chatTgl.style.display = 'none';
+      } else {
+        navCenterLinks.style.display = 'flex';
+        navSignin.style.display = 'inline-block';
+        navGetStarted.style.display = 'inline-block';
+        const chatTgl = document.getElementById('chatToggle');
+        if(chatTgl) chatTgl.style.display = 'flex';
+      }
+    }
+
+    function showAuth(type) {
+      const isAlreadyAuth = authView.style.display !== 'none' && authView.style.display !== '';
+      
+      const switchViews = () => {
+        const containers = [
+          { type: 'signup', el: signupContainer },
+          { type: 'login', el: loginContainer },
+          { type: 'forgot', el: forgotContainer }
+        ];
+        
+        // Find active container
+        const targetContainer = containers.find(c => c.type === type)?.el;
+        if (!targetContainer) return;
+        
+        // Fix card height to current height for smooth transition
+        const currentHeight = authCard.getBoundingClientRect().height;
+        authCard.style.height = currentHeight + 'px';
+        authCard.style.overflow = 'hidden';
+        authCard.style.transition = 'height 0.3s ease, transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.5s ease-out';
+        
+        // Fade out all containers
+        containers.forEach(c => {
+          if (c.el) {
+            c.el.style.transition = 'opacity 0.2s ease-out';
+            c.el.style.opacity = '0';
+          }
+        });
+        
+        // Wait for fade out, then swap
+        setTimeout(() => {
+          containers.forEach(c => {
+            if (c.el) c.el.style.display = 'none';
+          });
+          
+          targetContainer.style.display = 'block';
+          
+          if (type === 'forgot') {
+            const entryState = document.getElementById('forgot-entry-state');
+            const successState = document.getElementById('forgot-success-state');
+            const emailInput = document.getElementById('forgot-email');
+            if (entryState) {
+              entryState.style.display = 'block';
+              entryState.style.opacity = '1';
+            }
+            if (successState) {
+              successState.style.display = 'none';
+              successState.style.opacity = '0';
+            }
+            if (emailInput) {
+              emailInput.value = '';
+            }
+          }
+          
+          // Calculate new height
+          authCard.style.height = 'auto';
+          const newHeight = authCard.getBoundingClientRect().height;
+          authCard.style.height = currentHeight + 'px';
+          
+          // Force reflow
+          void authCard.offsetHeight;
+          
+          // Transition to new height and fade in content
+          authCard.style.height = newHeight + 'px';
+          targetContainer.style.opacity = '1';
+          
+          // Clean up fixed height after transition
+          setTimeout(() => {
+            authCard.style.height = 'auto';
+            authCard.style.overflow = 'visible';
+          }, 300);
+          
+        }, 200);
+      };
+
+      if (!isAlreadyAuth) {
+        // We are transitioning from landing page
+        landingView.style.transition = 'opacity 0.3s';
+        landingView.style.opacity = '0';
+        
+        setTimeout(() => {
+          landingView.style.display = 'none';
+          authView.style.display = 'flex';
+          
+          // Slight delay to allow display:flex to apply
+          setTimeout(() => {
+            authView.style.opacity = '1';
+            authCard.classList.add('enter');
+            
+            // Set initial displays without animation since card is entering
+            signupContainer.style.display = type === 'signup' ? 'block' : 'none';
+            signupContainer.style.opacity = type === 'signup' ? '1' : '0';
+            
+            loginContainer.style.display = type === 'login' ? 'block' : 'none';
+            loginContainer.style.opacity = type === 'login' ? '1' : '0';
+            
+            if (forgotContainer) {
+              forgotContainer.style.display = type === 'forgot' ? 'block' : 'none';
+              forgotContainer.style.opacity = type === 'forgot' ? '1' : '0';
+              // Reset to entry state
+              if (type === 'forgot') {
+                const entryState = document.getElementById('forgot-entry-state');
+                const successState = document.getElementById('forgot-success-state');
+                const emailInput = document.getElementById('forgot-email');
+                if (entryState) {
+                  entryState.style.display = 'block';
+                  entryState.style.opacity = '1';
+                }
+                if (successState) {
+                  successState.style.display = 'none';
+                  successState.style.opacity = '0';
+                }
+                if (emailInput) {
+                  emailInput.value = '';
+                }
+              }
+            }
+          }, 50);
+        }, 300);
+      } else {
+        // We are already in auth view, just switch the inner containers smoothly
+        switchViews();
+      }
+      
+      updateNavForAuth(true);
+    }
+
+    function showLanding() {
+      authView.style.opacity = '0';
+      authCard.classList.remove('enter');
+      
+      setTimeout(() => {
+        authView.style.display = 'none';
+        landingView.style.display = 'block';
+        setTimeout(() => {
+          landingView.style.opacity = '1';
+        }, 50);
+      }, 500);
+      
+      updateNavForAuth(false);
+    }
+
+    // Handle History API
+    function navTo(path, event) {
+      if (event) event.preventDefault();
+      
+      // If we are already on the page we clicked, don't do anything
+      if (window.location.pathname === path) return;
+      
+      window.history.pushState({}, '', path);
+      handleRoute(path);
+    }
+
+    function handleRoute(path) {
+      if (path === '/signup') {
+        showAuth('signup');
+      } else if (path === '/login') {
+        showAuth('login');
+      } else if (path === '/forgot-password') {
+        showAuth('forgot');
+      } else {
+        showLanding();
+      }
+    }
+
+    // Listen to back/forward buttons
+    window.addEventListener('popstate', () => {
+      handleRoute(window.location.pathname);
+    });
+
+    // Handle initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      const path = window.location.pathname;
+      if (path === '/signup' || path === '/login' || path === '/forgot-password') {
+        landingView.style.display = 'none';
+        landingView.style.opacity = '0';
+        authView.style.display = 'flex';
+        authView.style.opacity = '1';
+        authCard.classList.add('enter');
+        
+        if (path === '/signup') {
+          loginContainer.style.display = 'none';
+          loginContainer.style.opacity = '0';
+          if(forgotContainer) { forgotContainer.style.display = 'none'; forgotContainer.style.opacity = '0'; }
+          signupContainer.style.display = 'block';
+          signupContainer.style.opacity = '1';
+        } else if (path === '/forgot-password') {
+          signupContainer.style.display = 'none';
+          signupContainer.style.opacity = '0';
+          loginContainer.style.display = 'none';
+          loginContainer.style.opacity = '0';
+          if(forgotContainer) {
+            forgotContainer.style.display = 'block';
+            forgotContainer.style.opacity = '1';
+          }
+        } else {
+          signupContainer.style.display = 'none';
+          signupContainer.style.opacity = '0';
+          if(forgotContainer) { forgotContainer.style.display = 'none'; forgotContainer.style.opacity = '0'; }
+          loginContainer.style.display = 'block';
+          loginContainer.style.opacity = '1';
+        }
+        updateNavForAuth(true);
+      } else {
+        handleRoute(path);
+      }
+    });
+
+    // Intercept clicking on "Get Started" and "Sign In"
+    document.addEventListener('click', (e) => {
+      const href = e.target.closest('a')?.getAttribute('href');
+      if (href === '/' || href === '/signup' || href === '/login' || href === '/forgot-password') {
+        e.preventDefault();
+        navTo(href);
+      }
+    });
+
+    // Password features
+    window.togglePwd = function(id) {
+      const input = document.getElementById(id);
+      const btn = input.nextElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        btn.textContent = 'Show';
+      }
+    }
+
+    window.checkPasswordStrength = function(val) {
+      const segs = [
+        document.getElementById('seg-1'),
+        document.getElementById('seg-2'),
+        document.getElementById('seg-3'),
+        document.getElementById('seg-4')
+      ];
+      // Reset
+      segs.forEach(s => s.className = 'pwd-seg');
+      
+      if (!val) return;
+      
+      let strength = 0;
+      if (val.length >= 8) strength++;
+      if (/[A-Z]/.test(val)) strength++;
+      if (/[0-9]/.test(val)) strength++;
+      if (/[^A-Za-z0-9]/.test(val)) strength++;
+      
+      for(let i=0; i<strength; i++) {
+        segs[i].classList.add('s-' + strength);
+      }
+    }
+
+    // Form Handlers
+    
+    // Auth Error Utilities
+    function showAuthError(formType, message) {
+      const banner = document.getElementById(formType + '-error');
+      if (banner) {
+        banner.textContent = message;
+        banner.style.display = 'block';
+      }
+    }
+    
+    function hideAuthError(formType) {
+      const banner = document.getElementById(formType + '-error');
+      if (banner) banner.style.display = 'none';
+    }
+
+    // Form Handlers
+    window.handleSignup = function(e) {
+      e.preventDefault();
+      hideAuthError('signup');
+      
+      const pwd = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      const err = document.getElementById('signup-pwd-err');
+      
+      if (pwd !== confirm) {
+        err.style.display = 'block';
+        showAuthError('signup', 'Passwords do not match. Please try again.');
+        return;
+      }
+      err.style.display = 'none';
+      
+      const btn = document.getElementById('signup-btn');
+      btn.style.opacity = '0.7';
+      btn.textContent = 'Creating...';
+      
+      // Simulate API call
+      setTimeout(() => {
+        btn.style.opacity = '1';
+        btn.textContent = 'Create account';
+        navTo('/app');
+      }, 1000);
+    }
+
+    window.handleLogin = function(e) {
+      e.preventDefault();
+      hideAuthError('login');
+      
+      const email = document.getElementById('login-email').value;
+      const btn = document.getElementById('login-btn');
+      btn.style.opacity = '0.7';
+      btn.textContent = 'Signing in...';
+      
+      // Simulate API call
+      setTimeout(() => {
+        btn.style.opacity = '1';
+        btn.textContent = 'Sign in';
+        if (email.toLowerCase().includes('error')) {
+          showAuthError('login', 'Invalid email or password. Please try again.');
+        } else {
+          navTo('/app');
+        }
+      }, 1000);
+    }
+
+    // Google Identity Services (GIS) Callback
+    function handleCredentialResponse(response) {
+      const activeForm = window.location.pathname.replace('/', '') || 'login';
+      hideAuthError(activeForm);
+      console.log("Encoded JWT ID token: " + response.credential);
+      
+      // Simulate backend validation delay
+      setTimeout(() => {
+        navTo('/app');
+      }, 500);
+    }
+
+    window.triggerGoogleAuth = function() {
+      // Determine which form is currently active to show the error on the right banner
+      const activeForm = window.location.pathname.replace('/', '') || 'login';
+      hideAuthError(activeForm);
+      
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID", // Placeholder
+          callback: handleCredentialResponse
+        });
+        
+        // Display the One Tap UI, and handle cancellation/skip errors
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment() || notification.isDismissedMoment()) {
+             showAuthError(activeForm, "Google Sign-In was cancelled or blocked by your browser. Please try again or use your email.");
+          }
+        });
+      } else {
+         showAuthError(activeForm, "Google authentication service is currently unavailable. Please check your connection.");
+      }
+    }
+
+
+    
+    
+    window.handleForgotPassword = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('forgot-btn');
+      const emailInput = document.getElementById('forgot-email');
+      const email = emailInput.value;
+      const errorBanner = document.getElementById('forgot-error-banner');
+      const entryState = document.getElementById('forgot-entry-state');
+      const successState = document.getElementById('forgot-success-state');
+      const successEmailText = document.getElementById('forgot-success-email');
+      
+      btn.style.opacity = '0.7';
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      if (errorBanner) errorBanner.style.display = 'none';
+      
+      try {
+        const response = await fetch('/api/v1/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        
+        btn.style.opacity = '1';
+        btn.textContent = 'Send Reset Link';
+        btn.disabled = false;
+        
+        if (response.ok) {
+          // Calculate height for smooth transition
+          const authCard = document.getElementById('auth-card');
+          const currentHeight = authCard.getBoundingClientRect().height;
+          authCard.style.height = currentHeight + 'px';
+          authCard.style.overflow = 'hidden';
+          
+          // Cross-fade internal states
+          entryState.style.transition = 'opacity 0.2s ease-out';
+          entryState.style.opacity = '0';
+          
+          setTimeout(() => {
+            entryState.style.display = 'none';
+            successEmailText.textContent = email;
+            successState.style.display = 'block';
+            successState.style.opacity = '0';
+            successState.style.transition = 'opacity 0.2s ease-in';
+            
+            // Reflow and adjust height
+            authCard.style.height = 'auto';
+            const newHeight = authCard.getBoundingClientRect().height;
+            authCard.style.height = currentHeight + 'px';
+            void authCard.offsetHeight;
+            authCard.style.height = newHeight + 'px';
+            
+            successState.style.opacity = '1';
+            
+            setTimeout(() => {
+              authCard.style.height = 'auto';
+              authCard.style.overflow = 'visible';
+            }, 300);
+          }, 200);
+          
+        } else {
+          if (errorBanner) {
+            errorBanner.textContent = data.error || "An error occurred. Please try again.";
+            errorBanner.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        btn.style.opacity = '1';
+        btn.textContent = 'Send Reset Link';
+        btn.disabled = false;
+        if (errorBanner) {
+          errorBanner.textContent = "A network error occurred. Please try again.";
+          errorBanner.style.display = 'block';
+        }
+      }
+    }
+
+    // Chatbot Logic
+    const chatToggle = document.getElementById('chatToggle');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatClose = document.getElementById('chatClose');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    let isChatOpen = false;
+    
+    function toggleChat() {
+      isChatOpen = !isChatOpen;
+      if (isChatOpen) {
+        chatWindow.classList.add('open');
+        chatInput.focus();
+      } else {
+        chatWindow.classList.remove('open');
+      }
+    }
+    
+    chatToggle.addEventListener('click', toggleChat);
+    chatClose.addEventListener('click', toggleChat);
+    
+    function appendMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `chat-msg ${sender}`;
+      msgDiv.textContent = text;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return msgDiv;
+    }
+    
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      // User message
+      appendMessage(text, 'user');
+      chatInput.value = '';
+      
+      // Loading indicator
+      const loadingMsg = appendMessage('Thinking...', 'bot loading');
+      
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, sessionId: 'user-session' })
+        });
+        
+        const data = await response.json();
+        chatMessages.removeChild(loadingMsg);
+        
+        if (response.ok) {
+          appendMessage(data.text, 'bot');
+        } else {
+          appendMessage('Sorry, I encountered an error. Please try again.', 'bot');
+          console.error(data.error);
+        }
+      } catch (err) {
+        chatMessages.removeChild(loadingMsg);
+        appendMessage('Network error. Is the server running?', 'bot');
+      }
+    });
+
+  </script>
+
+  
+
+
+  
+</body>
+</html>
