@@ -13,7 +13,7 @@ const LandingPage = () => {
       <h1 className="hero-headline">Any invoice. Any language. Seconds.</h1>
       <p className="hero-sub">One AI that reads Arabic, French, English, Japanese, and 50+ more languages. PDFs, photos, scans. Factura turns any invoice from anywhere in the world into clean, exportable data. In under 30 seconds.</p>
       <div className="hero-ctas">
-        <a href="/signup" className="btn btn-primary">Start for free</a>
+        <Link to="/signup" className="btn btn-primary">Start for free</Link>
         <a href="#features" className="btn btn-outline">See it in action</a>
       </div>
       <div className="flags-row">
@@ -335,7 +335,7 @@ const LandingPage = () => {
             <li data-tooltip="Our base AI model automatically recognizes and translates invoices in over 50 languages."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 50+ Languages <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
             <li data-tooltip="Access Factura through our beautiful, intuitive web dashboard."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Web interface only <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
           </ul>
-          <a href="#" className="btn btn-outline" style={{ width: '100%' }}>Start for free</a>
+          <Link to="/signup" className="btn btn-outline" style={{ width: '100%' }}>Start for free</Link>
         </div>
         
         {/*  Pro  */}
@@ -350,7 +350,7 @@ const LandingPage = () => {
             <li data-tooltip="Native sync with NetSuite, SAP, Quickbooks, and Xero."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> ERP Integrations <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
             <li data-tooltip="Jump the queue. Get email support responses in under 2 hours."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Priority Support <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
           </ul>
-          <a href="#" className="btn btn-primary" style={{ width: '100%' }}>Start 14-day trial</a>
+          <Link to="/signup" className="btn btn-primary" style={{ width: '100%' }}>Start 14-day trial</Link>
         </div>
 
         {/*  Enterprise  */}
@@ -365,7 +365,7 @@ const LandingPage = () => {
             <li data-tooltip="Direct Slack channel and phone line to a dedicated technical account manager."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Dedicated account manager <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></li>
           </ul>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Run Factura on your own infrastructure, your data never leaves your network.</div>
-          <a href="#" className="btn btn-outline" style={{ width: '100%' }}>Contact Sales</a>
+          <Link to="/signup" className="btn btn-outline" style={{ width: '100%' }}>Contact Sales</Link>
         </div>
       </div>
     </div>

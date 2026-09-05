@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 
 const SignupPage = () => {
@@ -24,7 +25,7 @@ const SignupPage = () => {
     setLoading(true);
     try {
       await signup({ name, email, password });
-      navigate('/app');
+      navigate('/');
     } catch (err: any) {
       setError(err.message || 'Signup failed. Please try again.');
     } finally {
@@ -32,10 +33,20 @@ const SignupPage = () => {
     }
   };
 
+  const signupGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        await googleLogin(tokenResponse.access_token);
+        navigate('/');
+      } catch (err: any) {
+        setError(err.message || 'Google signup failed');
+      }
+    },
+    onError: () => setError('Google signup failed')
+  });
+
   const handleGoogle = () => {
-    if ((window as any).google) {
-      (window as any).google.accounts.id.prompt();
-    }
+    signupGoogle();
   };
 
   return (

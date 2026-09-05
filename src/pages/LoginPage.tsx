@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -16,7 +17,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await login({ email, password });
-      navigate('/app');
+      navigate('/');
     } catch (err: any) {
       setError(err.message || 'Invalid email or password. Please try again.');
     } finally {
@@ -24,11 +25,20 @@ const LoginPage = () => {
     }
   };
 
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        await googleLogin(tokenResponse.access_token);
+        navigate('/');
+      } catch (err: any) {
+        setError(err.message || 'Google login failed');
+      }
+    },
+    onError: () => setError('Google login failed')
+  });
+
   const handleGoogle = () => {
-    // Assuming google auth opens a popup or redirects. We will implement basic call here.
-    if ((window as any).google) {
-      (window as any).google.accounts.id.prompt();
-    }
+    loginGoogle();
   };
 
   return (
